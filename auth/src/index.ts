@@ -1,3 +1,5 @@
+import "express-async-errors";
+
 import cookieSession from 'cookie-session';
 import { errorHandler } from './middlewares/errorHandler'
 import express from 'express'
