@@ -15,7 +15,6 @@ signinRoute.post('/signin', [
     .withMessage('Email should be valid'),
   body('password')
     .trim()
-    .withMessage('Password can not be empty')
 ], requestValidator, async (req: Request, res: Response) => {
 
   const { email, password } = req?.body
