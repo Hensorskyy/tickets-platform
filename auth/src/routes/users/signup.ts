@@ -18,7 +18,6 @@ signupRoute.post('/signup', [
     .withMessage('Password must be between 4 and 20 characters')
 ], requestValidator,
   async (req: Request, res: Response) => {
-
     const { email, password } = req?.body
 
     const existingUser = await User.findOne({ email })
