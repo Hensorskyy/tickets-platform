@@ -1,14 +1,20 @@
 import axios from "axios"
 import { useState } from "react"
 
-export const useRequest = ({ method, url, body }) => {
+export const useRequest = ({ method, url, body, onSuccess }) => {
+  const [isLoading, setIsLoading] = useState(true)
   const [errors, setErrors] = useState(null)
 
   const doRequest = async () => {
     try {
+      const controller = new AbortController();
       setErrors(null)
-      const response = await axios[method](url, body)
-      console.log(response.data)
+      const response = await axios[method](url, { ...body, signal: controller.signal })
+      controller.abort()
+      if (onSuccess) {
+        onSuccess()
+      }
+      return response.data
     }
     catch (err) {
       const errors = (
@@ -21,7 +27,10 @@ export const useRequest = ({ method, url, body }) => {
         </div>)
       setErrors(errors)
     }
+    finally {
+      setIsLoading(false)
+    }
   }
 
-  return { doRequest, errors }
+  return { doRequest, isLoading, errors }
 }

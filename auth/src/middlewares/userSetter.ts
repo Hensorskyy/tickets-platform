@@ -19,7 +19,7 @@ export const userSetter = (req: Request, res: Response, next: NextFunction) => {
   const jwtToken = req?.session?.jwt
 
   if (!jwtToken) {
-    next()
+    return next()
   }
 
   try {
