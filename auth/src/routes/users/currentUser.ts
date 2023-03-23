@@ -1,5 +1,6 @@
 import { Router } from "express";
-import { userSetter } from "../../middlewares/userSetter";
+import { userSetter } from "@vhticketing/common";
+;
 
 const currentUserRoute = Router();
 
