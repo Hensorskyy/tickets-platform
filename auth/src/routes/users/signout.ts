@@ -3,7 +3,7 @@ import { Router } from "express";
 const signoutRoute = Router();
 
 signoutRoute.post('/signout', (req, res) => {
-  res.clearCookie("jwt");
+  req.session = null
 
   res.end()
 })
