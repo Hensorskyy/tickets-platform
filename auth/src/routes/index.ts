@@ -1,6 +1,6 @@
 import { Application, Router } from "express";
 
-import { NotFoundError } from "../errors/notFoundError";
+import { NotFoundError } from "@vhticketing/common";
 import usersRoutes from "./users";
 
 const apiRoutes = Router()

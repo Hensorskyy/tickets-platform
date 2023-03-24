@@ -1,7 +1,7 @@
 import "express-async-errors";
 
 import cookieSession from 'cookie-session';
-import { errorHandler } from './middlewares/errorHandler'
+import { errorHandler } from "@vhticketing/common";
 import express from 'express'
 import { setupRoutes } from './routes'
 

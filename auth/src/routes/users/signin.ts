@@ -1,10 +1,9 @@
+import { BadRequestError, requestValidator } from "@vhticketing/common";
 import { Request, Response, Router } from "express";
 
-import { BadRequestError } from "../../errors/badRequestError";
 import { Password } from "../../services.ts/password";
 import { User } from "../../models/user";
 import { body } from "express-validator";
-import { requestValidator } from "../../middlewares/requestValidator";
 import { sign } from "jsonwebtoken";
 
 const signinRoute = Router();
