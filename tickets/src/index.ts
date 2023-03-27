@@ -6,13 +6,12 @@ const start = async () => {
     throw new Error('JWT key is required')
   }
 
-
   if (!process.env.DB_URI) {
     throw new Error('DB URI must be specified')
   }
 
   try {
-    const dbName = 'auth';
+    const dbName = 'tickets';
 
     await mongoose.connect(`${process.env.DB_URI}/${dbName}`)
     console.log('Connected successfully to mongoDB');
