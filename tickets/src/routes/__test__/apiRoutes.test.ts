@@ -70,12 +70,12 @@ describe('creating new ticket route', () => {
 })
 
 describe('fetch tickets', () => {
-  // it('returns 404 if no ticket', async () => {
-  //   await request(app)
-  //     .get('/api/ticket/test')
-  //     .send()
-  //     .expect(404)
-  // })
+  it('returns 404 if no ticket', async () => {
+    await request(app)
+      .get('/api/tickets/sdfd')
+      .send()
+      .expect(404)
+  })
 
   it('returns ticket if it exists', async () => {
 

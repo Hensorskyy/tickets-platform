@@ -14,8 +14,6 @@ interface TicketModel extends Model<TicketDoc> {
   build(attrs: TicketAttrs): TicketDoc
 }
 
-
-
 const ticketSchema = new Schema({
   title: {
     type: String,
