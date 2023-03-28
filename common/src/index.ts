@@ -8,6 +8,6 @@ export * from './errors/requestValidationError'
 
 //Middlewares
 export * from './middlewares/errorHandler'
-export * from './middlewares/requestValidator'
-export * from './middlewares/userAuthorizator'
-export * from './middlewares/userSetter'
+export * from './middlewares/requestValidate'
+export * from './middlewares/userAuthorize'
+export * from './middlewares/userSet'
