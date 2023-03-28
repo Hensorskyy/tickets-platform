@@ -30,7 +30,7 @@ afterAll(async () => {
 
 
 global.signin = () => {
-  const payload = { email: 'test@test.com', id: '123' }
+  const payload = { email: 'test@test.com', id: new mongoose.Types.ObjectId() }
 
   const jwtToken = sign(payload, process.env.JWT_KEY!)
 

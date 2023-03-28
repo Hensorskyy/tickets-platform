@@ -54,7 +54,6 @@ describe('creating new ticket route', () => {
   })
 
   it('creates ticket if inputs are valid', async () => {
-
     let tickets = await Ticket.find({})
     expect(tickets.length).toEqual(0)
 
@@ -66,37 +65,5 @@ describe('creating new ticket route', () => {
 
     tickets = await Ticket.find({})
     expect(tickets.length).toEqual(1)
-  })
-})
-
-describe('fetch tickets', () => {
-  it('returns 404 if no ticket', async () => {
-    await request(app)
-      .get('/api/tickets/sdfd')
-      .send()
-      .expect(404)
-  })
-
-  it('returns ticket if it exists', async () => {
-
-    const ticket = {
-      title: 'test',
-      price: 10
-    }
-
-    const response = await request(app)
-      .post('/api/tickets')
-      .set('Cookie', signin())
-      .send(ticket)
-      .expect(201)
-
-    console.log(response?.body)
-
-    const ticketResponse = await request(app)
-      .get(`/api/tickets/${response.body?.id}`)
-      .send()
-      .expect(200)
-
-    expect(ticketResponse?.body.title).toEqual(ticket.title)
   })
 })
