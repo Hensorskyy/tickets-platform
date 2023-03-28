@@ -1,4 +1,4 @@
-import { BadRequestError, requestValidator } from "@vhticketing/common";
+import { BadRequestError, requestValidate } from "@vhticketing/common";
 import { Request, Response, Router } from "express";
 
 import { User } from "../../models/user";
@@ -15,7 +15,7 @@ signupRoute.post('/signup', [
     .trim()
     .isLength({ min: 4, max: 20 })
     .withMessage('Password must be between 4 and 20 characters')
-], requestValidator,
+], requestValidate,
   async (req: Request, res: Response) => {
     const { email, password } = req?.body
 

@@ -1,4 +1,4 @@
-import { BadRequestError, requestValidator } from "@vhticketing/common";
+import { BadRequestError, requestValidate } from "@vhticketing/common";
 import { Request, Response, Router } from "express";
 
 import { Password } from "../../services.ts/password";
@@ -14,7 +14,7 @@ signinRoute.post('/signin', [
     .withMessage('Email should be valid'),
   body('password')
     .trim()
-], requestValidator, async (req: Request, res: Response) => {
+], requestValidate, async (req: Request, res: Response) => {
 
   const { email, password } = req?.body
 

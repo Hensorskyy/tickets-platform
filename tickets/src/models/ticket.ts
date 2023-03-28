@@ -1,7 +1,5 @@
 import mongoose, { Document, Model, Schema } from "mongoose";
 
-import { Password } from "../services.ts/password";
-
 interface TicketAttrs {
   title: string,
   price: number,

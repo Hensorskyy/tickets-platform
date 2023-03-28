@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { userSetter } from "@vhticketing/common";
+import { userSet } from "@vhticketing/common";
 ;
 
 const currentUserRoute = Router();
 
-currentUserRoute.get('/currentUser', userSetter, (req, res) => {
+currentUserRoute.get('/currentUser', userSet, (req, res) => {
   res.status(200).send({ currentUser: req.currentUser || null });
 })
 
