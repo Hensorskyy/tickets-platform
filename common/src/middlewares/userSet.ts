@@ -15,7 +15,7 @@ declare global {
   }
 }
 
-export const userSetter = (req: Request, res: Response, next: NextFunction) => {
+export const userSet = (req: Request, res: Response, next: NextFunction) => {
   const jwtToken = req?.session?.jwt
 
   if (!jwtToken) {
