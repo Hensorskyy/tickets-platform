@@ -1,6 +1,6 @@
 import "express-async-errors";
 
-import { errorHandler, userSetter } from "@vhticketing/common";
+import { errorHandler, userSet } from "@vhticketing/common";
 
 import cookieSession from 'cookie-session';
 import express from 'express'
@@ -15,7 +15,7 @@ app.use(cookieSession({
   secure: process.env.NODE_ENV !== 'test'
 }))
 
-app.use(userSetter)
+app.use(userSet)
 
 setupRoutes(app)
 

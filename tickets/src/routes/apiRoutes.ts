@@ -1,4 +1,4 @@
-import { NotFoundError, requestValidator, userAuthorizator } from "@vhticketing/common";
+import { NotFoundError, requestValidate, userAuthorize } from "@vhticketing/common";
 import express, { Request, Response } from "express";
 
 import { Ticket } from "../models/ticket";
@@ -6,7 +6,7 @@ import { body } from "express-validator";
 
 const apiRouter = express.Router()
 
-apiRouter.post('/tickets', userAuthorizator, [
+apiRouter.post('/tickets', userAuthorize, [
   body('title')
     .not()
     .isEmpty()
@@ -14,20 +14,21 @@ apiRouter.post('/tickets', userAuthorizator, [
   body('price')
     .isFloat({ gt: 0 })
     .withMessage('Must be greater than 0')
-], requestValidator, async (req: Request, res: Response) => {
+], requestValidate, async (req: Request, res: Response) => {
 
   const { title, price } = req.body
 
   const ticket = Ticket.build({ title, price, userId: req.currentUser!.id })
-  await ticket.save()
+  const ticketResponse = await ticket.save()
 
-  res.sendStatus(201)
+  res.status(201).send(ticketResponse)
 })
 
 
 apiRouter.get('/tickets/:id', async (req: Request, res: Response) => {
-  const id = req.params.id
-  const ticket = await Ticket.findById(id)
+  const ticketId = req.params?.id
+
+  const ticket = await Ticket.findById(ticketId)
 
   if (!ticket) {
     throw new NotFoundError('Ticket was not found')
