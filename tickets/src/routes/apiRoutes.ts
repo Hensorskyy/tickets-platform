@@ -8,8 +8,6 @@ import { natsWrapper } from "../../natsWrapper";
 
 const apiRouter = express.Router()
 
-const ticketCreatedPublisher = new TicketCreatedPublisher(natsWrapper.client)
-
 apiRouter.post('/tickets', userSet, userAuthorize, [
   body('title')
     .not()
@@ -25,7 +23,9 @@ apiRouter.post('/tickets', userSet, userAuthorize, [
   const ticket = Ticket.build({ title, price, userId: req.currentUser!.id })
   const ticketResponse = await ticket.save()
 
+  const ticketCreatedPublisher = new TicketCreatedPublisher(natsWrapper.client)
   ticketCreatedPublisher.publish(ticket as TicketData)
+
   res.status(201).send(ticketResponse)
 })
 
