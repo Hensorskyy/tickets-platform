@@ -5,7 +5,7 @@ import { Ticket } from "../models/ticket";
 import { TicketCreatedPublisher } from "../events/publishers/ticketCreatedPublisher";
 import { TicketUpdatedPublisher } from "../events/publishers/ticketUpdatedPublisher";
 import { body } from "express-validator";
-import { natsWrapper } from "../../natsWrapper";
+import { natsWrapper } from "../natsWrapper";
 
 const apiRouter = express.Router()
 

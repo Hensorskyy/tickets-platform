@@ -1,5 +1,6 @@
 import { Ticket } from '../../models/ticket'
 import { app } from '../../app'
+import { natsWrapper } from '../../natsWrapper'
 import request from 'supertest'
 
 describe('creating new ticket route', () => {
@@ -65,5 +66,21 @@ describe('creating new ticket route', () => {
 
     tickets = await Ticket.find({})
     expect(tickets.length).toEqual(1)
+  })
+
+  it('publishes a new event', async () => {
+    let tickets = await Ticket.find({})
+    expect(tickets.length).toEqual(0)
+
+    await request(app)
+      .post('/api/tickets')
+      .set('Cookie', signin())
+      .send({ title: 'title', price: 10 })
+      .expect(201)
+
+    tickets = await Ticket.find({})
+    expect(tickets.length).toEqual(1)
+
+    expect(natsWrapper.client.publish).toHaveBeenCalled()
   })
 })

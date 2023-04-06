@@ -1,19 +1,26 @@
 import { app } from './app';
 import mongoose from 'mongoose';
-import { natsWrapper } from '../natsWrapper';
+import { natsWrapper } from './natsWrapper';
 
 const start = async () => {
   if (!process.env.JWT_KEY) {
     throw new Error('JWT key is required')
   }
-
   if (!process.env.DB_URI) {
     throw new Error('DB URI must be specified')
   }
 
+  if (!process.env.NATS_URI) {
+    throw new Error('NATS URI must be specified')
+  }
+  if (!process.env.NATS_CLUSTER_ID) {
+    throw new Error('NATS CLUSTER ID must be specified')
+  }
+  if (!process.env.NATS_CLIENT_ID) {
+    throw new Error('NATS CLIENT ID must be specified')
+  }
   try {
-    const natsCluster = 'ticketing';
-    await natsWrapper.connect(natsCluster, 'test', 'http://nats-srv:4222')
+    await natsWrapper.connect(process.env.NATS_CLUSTER_ID, process.env.NATS_CLIENT_ID, process.env.NATS_URI)
 
     natsWrapper.client.on('close', () => {
       console.log('NATS closing connection!')
