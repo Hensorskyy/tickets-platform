@@ -3,6 +3,7 @@ import express, { Request, Response } from "express";
 
 import { Ticket } from "../models/ticket";
 import { TicketCreatedPublisher } from "../events/publishers/ticketCreatedPublisher";
+import { TicketUpdatedPublisher } from "../events/publishers/ticketUpdatedPublisher";
 import { body } from "express-validator";
 import { natsWrapper } from "../../natsWrapper";
 
@@ -23,8 +24,7 @@ apiRouter.post('/tickets', userSet, userAuthorize, [
   const ticket = Ticket.build({ title, price, userId: req.currentUser!.id })
   const ticketResponse = await ticket.save()
 
-  const ticketCreatedPublisher = new TicketCreatedPublisher(natsWrapper.client)
-  ticketCreatedPublisher.publish(ticket as TicketData)
+  await new TicketCreatedPublisher(natsWrapper.client).publish(ticket as TicketData)
 
   res.status(201).send(ticketResponse)
 })
@@ -70,6 +70,8 @@ apiRouter.put('/tickets/:id', userSet, userAuthorize, [
 
   ticket.set(title ? { title } : { price })
   await ticket.save()
+
+  await new TicketUpdatedPublisher(natsWrapper.client).publish(ticket as TicketData)
 
   res.send(ticket)
 })
