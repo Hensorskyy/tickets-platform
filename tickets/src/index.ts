@@ -14,7 +14,14 @@ const start = async () => {
   try {
     const natsCluster = 'ticketing';
     await natsWrapper.connect(natsCluster, 'test', 'http://nats-srv:4222')
-    console.log('Connected successfully to NATS server');
+
+    natsWrapper.client.on('close', () => {
+      console.log('NATS closing connection!')
+      process.exit()
+    })
+
+    process.on('SIGINT', () => natsWrapper.client.close())
+    process.on('SIGTERM', () => natsWrapper.client.close())
   }
   catch (err) {
     console.error('Could not connect to NATS server', err)
