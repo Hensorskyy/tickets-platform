@@ -1,10 +1,14 @@
-import { NotAuthorizedError, NotFoundError, requestValidate, userAuthorize, userSet } from "@vhticketing/common";
+import { NotAuthorizedError, NotFoundError, TicketData, requestValidate, userAuthorize, userSet } from "@vhticketing/common";
 import express, { Request, Response } from "express";
 
 import { Ticket } from "../models/ticket";
+import { TicketCreatedPublisher } from "../events/publishers/ticketCreatedPublisher";
 import { body } from "express-validator";
+import { natsWrapper } from "../../natsWrapper";
 
 const apiRouter = express.Router()
+
+const ticketCreatedPublisher = new TicketCreatedPublisher(natsWrapper.client)
 
 apiRouter.post('/tickets', userSet, userAuthorize, [
   body('title')
@@ -21,6 +25,7 @@ apiRouter.post('/tickets', userSet, userAuthorize, [
   const ticket = Ticket.build({ title, price, userId: req.currentUser!.id })
   const ticketResponse = await ticket.save()
 
+  ticketCreatedPublisher.publish(ticket as TicketData)
   res.status(201).send(ticketResponse)
 })
 

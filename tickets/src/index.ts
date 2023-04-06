@@ -1,5 +1,6 @@
 import { app } from './app';
 import mongoose from 'mongoose';
+import { natsWrapper } from '../natsWrapper';
 
 const start = async () => {
   if (!process.env.JWT_KEY) {
@@ -11,8 +12,16 @@ const start = async () => {
   }
 
   try {
-    const dbName = 'tickets';
+    const natsCluster = 'ticketing';
+    await natsWrapper.connect(natsCluster, 'test', 'http://nats-srv:4222')
+    console.log('Connected successfully to NATS server');
+  }
+  catch (err) {
+    console.error('Could not connect to NATS server', err)
+  }
 
+  try {
+    const dbName = 'tickets';
     await mongoose.connect(`${process.env.DB_URI}/${dbName}`)
     console.log('Connected successfully to mongoDB');
   }
