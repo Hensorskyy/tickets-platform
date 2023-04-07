@@ -8,6 +8,8 @@ declare global {
 
 let mongoDB: MongoMemoryServer
 
+jest.mock('../natsWrapper')
+
 beforeAll(async () => {
   process.env.JWT_KEY = 'test'
   mongoDB = await MongoMemoryServer.create();
@@ -17,6 +19,7 @@ beforeAll(async () => {
 })
 
 beforeEach(async () => {
+  jest.clearAllMocks()
   const collections = await mongoose.connection.db.collections()
   for (let collection of collections) {
     await collection.deleteMany({})
