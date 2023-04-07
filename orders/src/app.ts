@@ -4,6 +4,7 @@ import { errorHandler, userSet } from "@vhticketing/common";
 
 import cookieSession from 'cookie-session';
 import express from 'express'
+import { setupRoutes } from "./routes";
 
 const app = express()
 app.set('trust proxy', true)
@@ -16,7 +17,8 @@ app.use(cookieSession({
 
 app.use(userSet)
 
+setupRoutes(app)
+
 app.use(errorHandler)
 
-app.use
 export { app }
