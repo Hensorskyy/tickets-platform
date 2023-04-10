@@ -18,6 +18,8 @@ export * from './events/basePublisher'
 export * from './events/subjects'
 export * from './events/ticketCreatedEvent'
 export * from './events/ticketUpdatedEvent'
+export * from './events/orderCancelled'
+export * from './events/orderCreated'
 
 //types
 export * from './events/types/orderStatus'
