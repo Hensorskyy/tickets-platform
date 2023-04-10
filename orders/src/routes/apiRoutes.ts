@@ -11,8 +11,9 @@ const EXPIRATION_SECONDS = 15 * 60
 
 const apiRouter = express.Router()
 
-apiRouter.get('/orders', async (req: Request, res: Response) => {
-  res.status(201).send()
+apiRouter.get('/orders', userAuthorize, async (req: Request, res: Response) => {
+  const orders = await Order.find({ userId: req?.currentUser?.id }).populate('ticket')
+  res.send(orders)
 })
 
 apiRouter.post('/orders', userAuthorize, [
@@ -50,15 +51,36 @@ apiRouter.post('/orders', userAuthorize, [
 })
 
 
-apiRouter.get('/orders/:id', async (req: Request, res: Response) => {
-  const ordersId = req.params?.id
-  res.send(ordersId)
+apiRouter.get('/orders/:id', userAuthorize, async (req: Request, res: Response) => {
+  const orderId = req.params?.id
+  const order = await Order.findById(orderId).populate('ticket')
+
+  if (!order) {
+    throw new NotFoundError('The order has not been found')
+  }
+  if (order.userId !== req.currentUser?.id) {
+    throw new NotAuthorizedError()
+  }
+
+  res.send(order)
 })
 
 
-apiRouter.delete('/orders/:id', async (req: Request, res: Response) => {
-  const ordersId = req.params?.id
-  res.send('')
+apiRouter.patch('/orders/:id', userAuthorize, async (req: Request, res: Response) => {
+  const orderId = req.params?.id
+  const order = await Order.findById(orderId)
+
+  if (!order) {
+    throw new NotFoundError('The order has not been found')
+  }
+  if (order.userId !== req.currentUser?.id) {
+    throw new NotAuthorizedError()
+  }
+
+  order.status = OrderStatus.Canceled
+  await order.save()
+
+  res.send(order)
 })
 
 export default apiRouter
