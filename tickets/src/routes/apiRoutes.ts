@@ -1,4 +1,4 @@
-import { NotAuthorizedError, NotFoundError, TicketData, requestValidate, userAuthorize, userSet } from "@vhticketing/common";
+import { NotAuthorizedError, NotFoundError, TicketData, requestValidate, userAuthorize } from "@vhticketing/common";
 import express, { Request, Response } from "express";
 
 import { Ticket } from "../models/ticket";
@@ -9,7 +9,7 @@ import { natsWrapper } from "../natsWrapper";
 
 const apiRouter = express.Router()
 
-apiRouter.post('/tickets', userSet, userAuthorize, [
+apiRouter.post('/tickets', userAuthorize, [
   body('title')
     .not()
     .isEmpty()
@@ -43,7 +43,7 @@ apiRouter.get('/tickets/:id', async (req: Request, res: Response) => {
 })
 
 
-apiRouter.put('/tickets/:id', userSet, userAuthorize, [
+apiRouter.put('/tickets/:id', userAuthorize, [
   body('title')
     .not()
     .isEmpty()
