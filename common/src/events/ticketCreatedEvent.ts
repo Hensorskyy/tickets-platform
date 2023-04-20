@@ -11,5 +11,3 @@ export interface TicketCreatedEvent {
   subject: Subjects.TicketCreated
   data: TicketData
 }
-
-
