@@ -1,12 +1,12 @@
 import { BadRequestError, NotAuthorizedError, NotFoundError, OrderStatus, requestValidate, userAuthorize } from "@vhticketing/common";
 import express, { Request, Response } from "express";
+import mongoose, { version } from "mongoose";
 
 import { Order } from "../models/order";
 import { OrderCancelledPublisher } from "../events/publishers/orderCancelledPublisher";
 import { OrderCreatedPublisher } from "../events/publishers/orderCreatedPublisher";
 import { Ticket } from "../models/ticket";
 import { body } from "express-validator";
-import mongoose from "mongoose";
 import { natsWrapper } from "../natsWrapper";
 
 const EXPIRATION_SECONDS = 15 * 60
@@ -54,6 +54,7 @@ apiRouter.post('/orders', userAuthorize, [
     status: OrderStatus.Created,
     expiresAt: order.expiresAt.toISOString(),
     userId: order.userId,
+    version: order.version,
     ticket: {
       id: ticket.id,
       price: ticket.price,
@@ -98,6 +99,7 @@ apiRouter.patch('/orders/:id', userAuthorize, async (req: Request, res: Response
     status: OrderStatus.Created,
     expiresAt: order.expiresAt.toISOString(),
     userId: order.userId,
+    version: order.version,
     ticket: {
       id: order.ticket.id,
       price: order.ticket.price,

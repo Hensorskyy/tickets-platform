@@ -1,6 +1,6 @@
 {
   "name": "@vhticketing/common",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "",
   "main": "./build/index.js",
   "types": "./build/index.d.ts",
@@ -10,7 +10,7 @@
   "scripts": {
     "clean": "del ./build/*",
     "build": "npm run clean && tsc",
-    "push": "npm rub build && npm publish"
+    "push": "npm run build && npm publish"
   },
   "keywords": [],
   "author": "",
