@@ -6,9 +6,12 @@ import { OrderStatus } from "@vhticketing/common";
 interface TicketAttrs {
   title: string,
   price: number,
+  id?: string
 }
 
-export interface TicketDoc extends Document, TicketAttrs {
+export interface TicketDoc extends Document {
+  title: string,
+  price: number,
   isReserved: () => Promise<boolean>
 }
 
@@ -37,7 +40,9 @@ const ticketSchema = new Schema({
 })
 
 ticketSchema.statics.build = (attrs: TicketAttrs) => {
-  return new Ticket(attrs)
+  const _id = attrs?.id
+  delete attrs.id
+  return new Ticket({ _id, ...attrs })
 }
 
 ticketSchema.methods.isReserved = async function () {
