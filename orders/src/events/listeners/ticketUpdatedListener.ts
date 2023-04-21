@@ -10,7 +10,11 @@ export class TicketUpdatedListener extends Listener<TicketUpdatedEvent> {
 
   async onMessage(ticketData: TicketData, msg: Message): Promise<void> {
 
-    const ticket = await Ticket.findById(ticketData?.id)
+    const ticket = await Ticket.findOne({
+      _id: ticketData.id,
+      version: ticketData.version - 1
+    })
+
     if (!ticket) {
       throw new NotFoundError('There is not such ticket')
     }
