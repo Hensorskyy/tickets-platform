@@ -10,6 +10,11 @@ interface TicketAttrs {
   id?: any,
 }
 
+interface EventData {
+  id: string,
+  version: number
+}
+
 export interface TicketDoc extends TicketAttrs, Document {
   isReserved: () => Promise<boolean>
   version: number
@@ -17,6 +22,7 @@ export interface TicketDoc extends TicketAttrs, Document {
 
 interface TicketModel extends Model<TicketDoc> {
   build(attrs: TicketAttrs): TicketDoc
+  findByEvent(event: EventData): Promise<TicketDoc | null>
 }
 
 const ticketSchema = new Schema({
@@ -46,6 +52,13 @@ ticketSchema.statics.build = (attrs: TicketAttrs) => {
   const _id = attrs?.id
   delete attrs.id
   return new Ticket({ _id, ...attrs })
+}
+
+ticketSchema.statics.findByEvent = ({ id, version }: EventData) => {
+  return Ticket.findOne({
+    _id: id,
+    version: version - 1
+  })
 }
 
 ticketSchema.methods.isReserved = async function () {
