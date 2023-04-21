@@ -68,7 +68,11 @@ apiRouter.put('/tickets/:id', userAuthorize, [
 
   const { title, price } = req.body
 
-  ticket.set(title ? { title } : { price })
+  ticket.set({
+    ...(title) && { title },
+    ...(price) && { price }
+  })
+
   await ticket.save()
 
   await new TicketUpdatedPublisher(natsWrapper.client).publish(ticket as TicketData)

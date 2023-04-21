@@ -10,11 +10,7 @@ export class TicketUpdatedListener extends Listener<TicketUpdatedEvent> {
 
   async onMessage(ticketData: TicketData, msg: Message): Promise<void> {
 
-    const ticket = await Ticket.findOne({
-      _id: ticketData.id,
-      version: ticketData.version - 1
-    })
-
+    const ticket = await Ticket.findByEvent(ticketData)
     if (!ticket) {
       throw new NotFoundError('There is not such ticket')
     }
@@ -22,6 +18,8 @@ export class TicketUpdatedListener extends Listener<TicketUpdatedEvent> {
     const { title, price } = ticketData
     ticket.set({ title, price })
     await ticket.save()
+
+    console.log(ticket)
 
     msg.ack()
   }

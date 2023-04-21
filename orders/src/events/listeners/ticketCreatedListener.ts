@@ -12,6 +12,8 @@ export class TicketCreatedListener extends Listener<TicketCreatedEvent> {
     const ticket = Ticket.build(ticketData)
     await ticket.save()
 
+    console.log(ticket)
+
     msg.ack()
   }
 
