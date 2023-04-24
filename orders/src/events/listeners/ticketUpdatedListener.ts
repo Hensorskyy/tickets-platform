@@ -19,8 +19,6 @@ export class TicketUpdatedListener extends Listener<TicketUpdatedEvent> {
     ticket.set({ title, price })
     await ticket.save()
 
-    console.log(ticket)
-
     msg.ack()
   }
 
