@@ -9,10 +9,8 @@ import { natsWrapper } from "../../../natsWrapper"
 const setup = async () => {
   const listener = new TicketUpdatedListener(natsWrapper.client)
 
-  const ticketId = new mongoose.Types.ObjectId().toHexString()
-
   const ticket = Ticket.build({
-    id: ticketId,
+    id: new mongoose.Types.ObjectId().toHexString(),
     title: 'football',
     price: 100
   })
@@ -20,7 +18,7 @@ const setup = async () => {
   await ticket.save()
 
   const data: TicketData = {
-    id: ticketId,
+    id: ticket.id,
     title: 'Test Football',
     price: 100,
     userId: new mongoose.Types.ObjectId().toHexString(),
@@ -32,14 +30,14 @@ const setup = async () => {
     ack: jest.fn()
   }
 
-  return { listener, data, msg, ticket }
+  return { listener, data, msg }
 }
 
 it('updates ticket', async () => {
-  const { listener, data, msg, ticket } = await setup()
+  const { listener, data, msg } = await setup()
   await listener.onMessage(data, msg)
 
-  const updatedTicket = await Ticket.findById(ticket.id)
+  const updatedTicket = await Ticket.findById(data.id)
 
   expect(updatedTicket).toBeDefined()
   expect(updatedTicket?.price).toBe(data.price)
@@ -52,4 +50,15 @@ it('acknowledges event', async () => {
   await listener.onMessage(data, msg)
 
   expect(msg.ack).toBeCalled()
+})
+
+it('does not acknowledges event from future', async () => {
+  const { listener, data, msg } = await setup()
+  data.version = 10
+
+  try {
+    await listener.onMessage(data, msg)
+  }
+  catch (err) { }
+  expect(msg.ack).not.toHaveBeenCalled()
 })

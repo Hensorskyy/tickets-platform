@@ -7,7 +7,11 @@ import { natsWrapper } from '../../natsWrapper'
 import request from 'supertest'
 
 const buildTicket = async () => {
-  const ticket = Ticket.build({ title: 'footbal', price: 50 })
+  const ticket = Ticket.build({
+    id: new mongoose.Types.ObjectId().toHexString(),
+    title: 'footbal',
+    price: 50
+  })
   await ticket.save()
   return ticket
 }
