@@ -1,4 +1,4 @@
-import { NotAuthorizedError, NotFoundError, TicketData, requestValidate, userAuthorize } from "@vhticketing/common";
+import { BadRequestError, NotAuthorizedError, NotFoundError, TicketData, requestValidate, userAuthorize } from "@vhticketing/common";
 import express, { Request, Response } from "express";
 
 import { Ticket } from "../models/ticket";
@@ -60,6 +60,10 @@ apiRouter.put('/tickets/:id', userAuthorize, [
 
   if (!ticket) {
     throw new NotFoundError('Ticket was not found')
+  }
+
+  if (ticket.orderId) {
+    throw new BadRequestError('Reserved ticket is not editable')
   }
 
   if (ticket.userId !== req.currentUser?.id) {
