@@ -1,3 +1,5 @@
+import { OrderCancelledListener } from './events/listeners/orderCancelledListener';
+import { OrderCreatedListener } from './events/listeners/orderCreatedListener';
 import { app } from './app';
 import mongoose from 'mongoose';
 import { natsWrapper } from './natsWrapper';
@@ -29,6 +31,9 @@ const start = async () => {
 
     process.on('SIGINT', () => natsWrapper.client.close())
     process.on('SIGTERM', () => natsWrapper.client.close())
+
+    new OrderCancelledListener(natsWrapper.client).listen()
+    new OrderCreatedListener(natsWrapper.client).listen()
   }
   catch (err) {
     console.error('Could not connect to NATS server', err)

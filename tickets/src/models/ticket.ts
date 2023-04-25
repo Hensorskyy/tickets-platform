@@ -10,6 +10,7 @@ interface TicketAttrs {
 
 interface TicketDoc extends Document, TicketAttrs {
   version: number
+  orderId?: string
 }
 
 interface TicketModel extends Model<TicketDoc> {
@@ -28,6 +29,9 @@ const ticketSchema = new Schema({
   userId: {
     type: String,
     required: true
+  },
+  orderId: {
+    type: String
   }
 }, {
   toJSON: {
