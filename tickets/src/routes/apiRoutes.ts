@@ -1,4 +1,4 @@
-import { NotAuthorizedError, NotFoundError, TicketData, requestValidate, userAuthorize } from "@vhticketing/common";
+import { BadRequestError, NotAuthorizedError, NotFoundError, TicketData, requestValidate, userAuthorize } from "@vhticketing/common";
 import express, { Request, Response } from "express";
 
 import { Ticket } from "../models/ticket";
@@ -62,13 +62,21 @@ apiRouter.put('/tickets/:id', userAuthorize, [
     throw new NotFoundError('Ticket was not found')
   }
 
+  if (ticket.orderId) {
+    throw new BadRequestError('Reserved ticket is not editable')
+  }
+
   if (ticket.userId !== req.currentUser?.id) {
     throw new NotAuthorizedError()
   }
 
   const { title, price } = req.body
 
-  ticket.set(title ? { title } : { price })
+  ticket.set({
+    ...(title) && { title },
+    ...(price) && { price }
+  })
+
   await ticket.save()
 
   await new TicketUpdatedPublisher(natsWrapper.client).publish(ticket as TicketData)

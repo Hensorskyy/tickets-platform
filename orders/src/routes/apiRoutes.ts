@@ -2,6 +2,8 @@ import { BadRequestError, NotAuthorizedError, NotFoundError, OrderStatus, reques
 import express, { Request, Response } from "express";
 
 import { Order } from "../models/order";
+import { OrderCancelledPublisher } from "../events/publishers/orderCancelledPublisher";
+import { OrderCreatedPublisher } from "../events/publishers/orderCreatedPublisher";
 import { Ticket } from "../models/ticket";
 import { body } from "express-validator";
 import mongoose from "mongoose";
@@ -47,6 +49,18 @@ apiRouter.post('/orders', userAuthorize, [
 
   await order.save()
 
+  new OrderCreatedPublisher(natsWrapper.client).publish({
+    id: order.id,
+    status: OrderStatus.Created,
+    expiresAt: order.expiresAt.toISOString(),
+    userId: order.userId,
+    version: order.version,
+    ticket: {
+      id: ticket.id,
+      price: ticket.price,
+    }
+  })
+
   res.status(201).send(order)
 })
 
@@ -68,7 +82,7 @@ apiRouter.get('/orders/:id', userAuthorize, async (req: Request, res: Response) 
 
 apiRouter.patch('/orders/:id', userAuthorize, async (req: Request, res: Response) => {
   const orderId = req.params?.id
-  const order = await Order.findById(orderId)
+  const order = await Order.findById(orderId).populate('ticket')
 
   if (!order) {
     throw new NotFoundError('The order has not been found')
@@ -79,6 +93,18 @@ apiRouter.patch('/orders/:id', userAuthorize, async (req: Request, res: Response
 
   order.status = OrderStatus.Canceled
   await order.save()
+
+  new OrderCancelledPublisher(natsWrapper.client).publish({
+    id: order.id,
+    status: OrderStatus.Created,
+    expiresAt: order.expiresAt.toISOString(),
+    userId: order.userId,
+    version: order.version,
+    ticket: {
+      id: order.ticket.id,
+      price: order.ticket.price,
+    }
+  })
 
   res.send(order)
 })

@@ -6,6 +6,7 @@ export interface OrderData {
   status: OrderStatus
   expiresAt: string
   userId: string
+  version: number
   ticket: {
     id: string
     price: number

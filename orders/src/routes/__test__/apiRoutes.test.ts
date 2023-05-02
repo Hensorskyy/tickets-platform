@@ -3,10 +3,15 @@ import { OrderStatus } from '@vhticketing/common'
 import { Ticket } from '../../models/ticket'
 import { app } from '../../app'
 import mongoose from 'mongoose'
+import { natsWrapper } from '../../natsWrapper'
 import request from 'supertest'
 
 const buildTicket = async () => {
-  const ticket = Ticket.build({ title: 'footbal', price: 50 })
+  const ticket = Ticket.build({
+    id: new mongoose.Types.ObjectId().toHexString(),
+    title: 'footbal',
+    price: 50
+  })
   await ticket.save()
   return ticket
 }
@@ -46,6 +51,19 @@ describe('checks if user is able to create an order', () => {
       .send({ ticketId: ticket?.id })
       .expect(201)
   })
+
+  it('publishes an event once a ticket is created', async () => {
+    const ticket = await buildTicket()
+
+    await request(app)
+      .post('/api/orders')
+      .set('Cookie', signin())
+      .send({ ticketId: ticket?.id })
+      .expect(201)
+
+    expect(natsWrapper.client.publish).toHaveBeenCalled()
+  })
+
 })
 
 describe('user can retrieve the orders', () => {
@@ -151,5 +169,33 @@ describe('user can cancel an order', () => {
 
     expect(order.id).toEqual(canceledOrder.id)
     expect(canceledOrder.status).toEqual(OrderStatus.Canceled)
+  })
+
+  it('publishes an event when order is canceled', async () => {
+    const ticket = await buildTicket()
+
+    const user = signin()
+
+    const { body: order } = await request(app)
+      .post('/api/orders')
+      .set('Cookie', user)
+      .send({ ticketId: ticket?.id })
+      .expect(201)
+
+    await request(app)
+      .patch(`/api/orders/${order?.id}`)
+      .set('Cookie', user)
+      .send()
+      .expect(200)
+
+    const { body: canceledOrder } = await request(app)
+      .get(`/api/orders/${order?.id}`)
+      .set('Cookie', user)
+      .send()
+      .expect(200)
+
+    expect(order.id).toEqual(canceledOrder.id)
+    expect(canceledOrder.status).toEqual(OrderStatus.Canceled)
+    expect(natsWrapper.client.publish).toHaveBeenCalled()
   })
 })
