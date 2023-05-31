@@ -1,5 +1,5 @@
 import { OrderStatus } from '..';
-import { Subjects } from './subjects';
+import { Subjects } from './types/subjects';
 
 export interface OrderData {
   id: string

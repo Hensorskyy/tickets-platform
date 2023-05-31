@@ -1,4 +1,4 @@
-import { Subjects } from './subjects';
+import { Subjects } from './types/subjects';
 import { TicketData } from '..';
 
 export interface TicketUpdatedEvent {

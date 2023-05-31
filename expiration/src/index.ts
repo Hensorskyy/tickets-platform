@@ -1,3 +1,4 @@
+import { OrderListener } from './events/listeners/OrderListener';
 import { natsWrapper } from './natsWrapper';
 
 const start = async () => {
@@ -20,6 +21,8 @@ const start = async () => {
 
     process.on('SIGINT', () => natsWrapper.client.close())
     process.on('SIGTERM', () => natsWrapper.client.close())
+
+    new OrderListener(natsWrapper.client).listen()
   }
   catch (err) {
     console.error('Could not connect to NATS server', err)
