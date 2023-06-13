@@ -21,5 +21,4 @@ setupRoutes(app)
 
 app.use(errorHandler)
 
-app.use
 export { app }
