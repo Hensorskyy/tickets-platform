@@ -2,7 +2,9 @@ import { BadRequestError, NotAuthorizedError, NotFoundError, OrderStatus, reques
 import { Request, Response, Router } from "express";
 
 import { Order } from "../models/order";
+import { Payment } from "../models/payment";
 import { body } from "express-validator";
+import { stripe } from "../stripe";
 
 const chargeRouter = Router()
 
@@ -25,7 +27,16 @@ chargeRouter.post('/api/payments',
             throw new BadRequestError('Can not pay for cancelled order')
         }
 
-        res.send({succes: true})
+        const charge = await stripe.charges.create({
+            currency:'usd',
+            amount: order.price * 100,
+            source: token
+        })
+        
+        const payment = Payment.build({ orderId, stripeId: charge.id })
+        await payment.save()
+        
+        res.status(201).send({succes: true})
 })
 
 export {chargeRouter}
