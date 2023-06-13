@@ -13,7 +13,7 @@ spec:
         app: payments
     spec:
       containers:
-        - name: tickets
+        - name: payments
           image: vhensorskyi/payments
           env:
             - name: NATS_URI
