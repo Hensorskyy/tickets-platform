@@ -2,6 +2,7 @@ import "express-async-errors";
 
 import { errorHandler, userSet } from "@vhticketing/common";
 
+import { chargeRouter } from "./routes/new";
 import cookieSession from 'cookie-session';
 import express from 'express'
 
@@ -15,6 +16,8 @@ app.use(cookieSession({
 }))
 
 app.use(userSet)
+
+app.use(chargeRouter)
 
 app.use(errorHandler)
 
