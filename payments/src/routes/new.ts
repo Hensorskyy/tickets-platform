@@ -3,7 +3,9 @@ import { Request, Response, Router } from "express";
 
 import { Order } from "../models/order";
 import { Payment } from "../models/payment";
+import { PaymentCreatedPublisher } from "../events/publishers/paymentCreatedPublisher";
 import { body } from "express-validator";
+import { natsWrapper } from "../natsWrapper";
 import { stripe } from "../stripe";
 
 const chargeRouter = Router()
@@ -35,8 +37,14 @@ chargeRouter.post('/api/payments',
         
         const payment = Payment.build({ orderId, stripeId: charge.id })
         await payment.save()
+
+        new PaymentCreatedPublisher(natsWrapper.client).publish({
+            id: payment.id,
+            orderId: payment.orderId,
+            stripeId: payment.stripeId
+        })
         
-        res.status(201).send({succes: true})
+        res.status(201).send({id: payment.id})
 })
 
 export {chargeRouter}

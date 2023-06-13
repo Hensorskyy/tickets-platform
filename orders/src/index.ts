@@ -1,4 +1,5 @@
 import { ExpirationCompletedListener } from './events/listeners/expirationCompletedListener';
+import { PaymentCreatedListener } from './events/listeners/paymentCreatedListener';
 import { TicketCreatedListener } from './events/listeners/ticketCreatedListener';
 import { TicketUpdatedListener } from './events/listeners/ticketUpdatedListener';
 import { app } from './app';
@@ -35,6 +36,7 @@ const start = async () => {
     new TicketCreatedListener(natsWrapper.client).listen()
     new TicketUpdatedListener(natsWrapper.client).listen()
     new ExpirationCompletedListener(natsWrapper.client).listen()
+    new PaymentCreatedListener(natsWrapper.client).listen()
 
   }
   catch (err) {

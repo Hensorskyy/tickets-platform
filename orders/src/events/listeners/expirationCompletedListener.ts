@@ -17,6 +17,10 @@ export class ExpirationCompletedListener extends Listener<ExpirationCompletedEve
       throw new Error(`The order ${orderId} is not found`);
     }
 
+    if(order.status === OrderStatus.Compelete) {
+      return msg.ack()
+    }
+
     order.set({ status: OrderStatus.Canceled });
     await order.save()
 
