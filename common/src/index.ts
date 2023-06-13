@@ -15,11 +15,12 @@ export * from './middlewares/userSet'
 //events
 export * from './events/baseListener'
 export * from './events/basePublisher'
-export * from './events/subjects'
+export * from './events/types/subjects'
 export * from './events/ticketCreatedEvent'
 export * from './events/ticketUpdatedEvent'
-export * from './events/orderCancelled'
-export * from './events/orderCreated'
+export * from './events/orderCancelledEvent'
+export * from './events/orderCreatedEvent'
+export * from './events/expirationCompletedEvent'
 
 //types
 export * from './events/types/orderStatus'
