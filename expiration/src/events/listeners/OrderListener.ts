@@ -9,8 +9,8 @@ export class OrderListener extends Listener<OrderCreatedEvent>{
   queueGroupName = queueGroupName;
 
   async onMessage(data: OrderData, msg: Message): Promise<void> {
-    const delay = new Date(data.expiresAt).getTime()
-    console.log(`Waiting ${delay} milisecond before publishsing the event`)
+    const delay = new Date(data.expiresAt).getTime() - new Date().getTime();
+    console.log(`Waiting ${delay} milisecond before publishing the event`)
     await expirationQueue.add({ orderId: data.id }, { delay })
 
     msg.ack()
