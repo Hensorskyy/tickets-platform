@@ -1,21 +1,34 @@
-import { getAxiosClient } from "../api/helper"
+const LandingPage = ({ currentUser, tickets }) => {
 
-const LandingPage = ({ currentUser }) => {
-  return <h1>{currentUser ? 'You are signed in' : 'You are not signed in'}</h1>
+  const ticketList = tickets?.map(ticket => {
+    return <tr key={ticket.id}>
+      <td>{ticket.title}</td>
+      <td>{ticket.price}</td>
+    </tr>
+  })
+
+  return (
+    <div>
+      <h1>Tickets</h1>
+      <table className="table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          {ticketList}
+        </tbody>
+      </table>
+    </div>
+  )
 }
 
-LandingPage.getInitialProps = async (context) => {
-  let currentUser = {}
-  try {
-    const { data } = await getAxiosClient(context).get('/api/users/currentUser')
-    currentUser = data?.currentUser
-  }
-  catch (err) {
-    console.log(err)
-  }
-  finally {
-    return { currentUser }
-  }
+LandingPage.getInitialProps = async (context, axiosClient, currentUser) => {
+  const {data} = await axiosClient.get('/api/tickets')
+  console.log(data)
+  return {tickets: data}
 }
 
 export default LandingPage

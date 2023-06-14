@@ -12,7 +12,7 @@ export const useRequest = ({ method, url, body, onSuccess }) => {
       const response = await axios[method](url, { ...body, signal: controller.signal })
       controller.abort()
       if (onSuccess) {
-        onSuccess()
+        onSuccess(response?.data)
       }
       return response.data
     }
