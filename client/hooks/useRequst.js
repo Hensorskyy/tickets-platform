@@ -5,11 +5,11 @@ export const useRequest = ({ method, url, body, onSuccess }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [errors, setErrors] = useState(null)
 
-  const doRequest = async () => {
+  const doRequest = async (props = {}) => {
     try {
       const controller = new AbortController();
       setErrors(null)
-      const response = await axios[method](url, { ...body, signal: controller.signal })
+      const response = await axios[method](url, { ...body, ...props, signal: controller.signal })
       controller.abort()
       if (onSuccess) {
         onSuccess(response?.data)
