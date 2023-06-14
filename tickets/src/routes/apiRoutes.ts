@@ -29,6 +29,12 @@ apiRouter.post('/tickets', userAuthorize, [
   res.status(201).send(ticketResponse)
 })
 
+apiRouter.get('/tickets', async (req: Request, res: Response) => {
+  const tickets = await Ticket.find({});
+
+  res.send(tickets);
+});
+
 
 apiRouter.get('/tickets/:id', async (req: Request, res: Response) => {
   const ticketId = req.params?.id
