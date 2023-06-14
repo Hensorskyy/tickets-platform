@@ -1,10 +1,10 @@
 import { Subjects } from "..";
 
 export interface ExpirationData {
-  orderId: string
+  orderId: string;
 }
 
 export interface ExpirationCompletedEvent {
-  subject: Subjects.ExpirationCompleted,
-  data: ExpirationData
+  subject: Subjects.ExpirationCompleted;
+  data: ExpirationData;
 }

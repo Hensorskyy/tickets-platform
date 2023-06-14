@@ -1,7 +1,7 @@
-import { Subjects } from './types/subjects';
-import { TicketData } from '..';
+import { Subjects } from "./types/subjects";
+import { TicketData } from "..";
 
 export interface TicketUpdatedEvent {
-  subject: Subjects.TicketUpdated
-  data: TicketData
+  subject: Subjects.TicketUpdated;
+  data: TicketData;
 }

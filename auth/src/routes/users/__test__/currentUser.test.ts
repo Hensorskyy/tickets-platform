@@ -1,29 +1,26 @@
-import { app } from '../../../app'
-import request from 'supertest'
+import { app } from "../../../app";
+import request from "supertest";
 
-const user = { email: 'test@test.com', password: 'password' }
+const user = { email: "test@test.com", password: "password" };
 
-describe('current user route tests', () => {
-  it('respons with details about the current user', async () => {
-
-    const cookie = await global.signin()
+describe("current user route tests", () => {
+  it("respons with details about the current user", async () => {
+    const cookie = await global.signin();
     const response = await request(app)
-      .get('/api/users/currentUser')
-      .set('Cookie', cookie)
+      .get("/api/users/currentUser")
+      .set("Cookie", cookie)
       .send()
-      .expect(200)
+      .expect(200);
 
-    expect(response.body.currentUser.email).toEqual(user.email)
-  })
+    expect(response.body.currentUser.email).toEqual(user.email);
+  });
 
-  it('respons with 401 if not authenticated', async () => {
-
+  it("respons with 401 if not authenticated", async () => {
     const response = await request(app)
-      .get('/api/users/currentUser')
+      .get("/api/users/currentUser")
       .send()
-      .expect(200)
+      .expect(200);
 
-    expect(response.body.currentUser).toEqual(null)
-  })
-
-})
+    expect(response.body.currentUser).toEqual(null);
+  });
+});

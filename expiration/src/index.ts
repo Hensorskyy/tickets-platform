@@ -1,33 +1,35 @@
-import { OrderListener } from './events/listeners/OrderListener';
-import { natsWrapper } from './natsWrapper';
+import { OrderListener } from "./events/listeners/OrderListener";
+import { natsWrapper } from "./natsWrapper";
 
 const start = async () => {
   if (!process.env.NATS_URI) {
-    throw new Error('NATS URI must be specified')
+    throw new Error("NATS URI must be specified");
   }
   if (!process.env.NATS_CLUSTER_ID) {
-    throw new Error('NATS CLUSTER ID must be specified')
+    throw new Error("NATS CLUSTER ID must be specified");
   }
   if (!process.env.NATS_CLIENT_ID) {
-    throw new Error('NATS CLIENT ID must be specified')
+    throw new Error("NATS CLIENT ID must be specified");
   }
   try {
-    await natsWrapper.connect(process.env.NATS_CLUSTER_ID, process.env.NATS_CLIENT_ID, process.env.NATS_URI)
+    await natsWrapper.connect(
+      process.env.NATS_CLUSTER_ID,
+      process.env.NATS_CLIENT_ID,
+      process.env.NATS_URI
+    );
 
-    natsWrapper.client.on('close', () => {
-      console.log('NATS closing connection!')
-      process.exit()
-    })
+    natsWrapper.client.on("close", () => {
+      console.log("NATS closing connection!");
+      process.exit();
+    });
 
-    process.on('SIGINT', () => natsWrapper.client.close())
-    process.on('SIGTERM', () => natsWrapper.client.close())
+    process.on("SIGINT", () => natsWrapper.client.close());
+    process.on("SIGTERM", () => natsWrapper.client.close());
 
-    new OrderListener(natsWrapper.client).listen()
+    new OrderListener(natsWrapper.client).listen();
+  } catch (err) {
+    console.error("Could not connect to NATS server", err);
   }
-  catch (err) {
-    console.error('Could not connect to NATS server', err)
-  }
-}
+};
 
-start()
-
+start();

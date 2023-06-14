@@ -1,3 +1,3 @@
-export const queueGroupName = 'expiration-service'
+export const queueGroupName = "expiration-service";
 
-export const bullQueueName = 'expiration:order'
+export const bullQueueName = "expiration:order";

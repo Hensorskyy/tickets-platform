@@ -3,8 +3,8 @@ import { NextFunction, Request, Response } from "express";
 import { verify } from "jsonwebtoken";
 
 interface UserPayload {
-  id: string,
-  email: string
+  id: string;
+  email: string;
 }
 
 declare global {
@@ -16,20 +16,17 @@ declare global {
 }
 
 export const userSet = (req: Request, res: Response, next: NextFunction) => {
-  const jwtToken = req?.session?.jwt
+  const jwtToken = req?.session?.jwt;
 
   if (!jwtToken) {
-    return next()
+    return next();
   }
 
   try {
-    const payload = verify(
-      jwtToken,
-      process.env.JWT_KEY!
-    ) as UserPayload;
+    const payload = verify(jwtToken, process.env.JWT_KEY!) as UserPayload;
 
     req.currentUser = payload;
-  } catch (err) { }
+  } catch (err) {}
 
-  next()
-}
+  next();
+};

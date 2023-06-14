@@ -4,9 +4,8 @@ import { NotFoundError } from "@vhticketing/common";
 import apiRoutes from "./apiRoutes";
 
 export const setupRoutes = (app: Application) => {
-  app.use('/api', apiRoutes)
-  app.all('*', () => {
-    throw new NotFoundError()
-  })
-}
-
+  app.use("/api", apiRoutes);
+  app.all("*", () => {
+    throw new NotFoundError();
+  });
+};

@@ -6,9 +6,9 @@ import signupRoute from "./signup";
 
 const usersRoutes = Router();
 
-usersRoutes.use(currentUserRoute)
-usersRoutes.use(signinRoute)
-usersRoutes.use(signupRoute)
-usersRoutes.use(signoutRoute)
+usersRoutes.use(currentUserRoute);
+usersRoutes.use(signinRoute);
+usersRoutes.use(signupRoute);
+usersRoutes.use(signoutRoute);
 
 export default usersRoutes;

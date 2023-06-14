@@ -1,7 +1,7 @@
-import { OrderData } from './orderCreatedEvent';
-import { Subjects } from './types/subjects';
+import { OrderData } from "./orderCreatedEvent";
+import { Subjects } from "./types/subjects";
 
 export interface OrderCancelledEvent {
-  subject: Subjects.OrderCancelled
-  data: OrderData
+  subject: Subjects.OrderCancelled;
+  data: OrderData;
 }

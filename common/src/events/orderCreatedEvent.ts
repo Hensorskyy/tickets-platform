@@ -1,21 +1,19 @@
-import { OrderStatus } from '..';
-import { Subjects } from './types/subjects';
+import { OrderStatus } from "..";
+import { Subjects } from "./types/subjects";
 
 export interface OrderData {
-  id: string
-  status: OrderStatus
-  expiresAt: string
-  userId: string
-  version: number
+  id: string;
+  status: OrderStatus;
+  expiresAt: string;
+  userId: string;
+  version: number;
   ticket: {
-    id: string
-    price: number
-  }
+    id: string;
+    price: number;
+  };
 }
 
 export interface OrderCreatedEvent {
-  subject: Subjects.OrderCreated
-  data: OrderData
+  subject: Subjects.OrderCreated;
+  data: OrderData;
 }
-
-

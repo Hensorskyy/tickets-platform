@@ -1,8 +1,5 @@
-import LoginForm from "../../components/LoginForm"
+import LoginForm from "../../components/LoginForm";
 
 export default () => {
-
-  return (
-    <LoginForm title={'Sign In'} submitUrl={'/api/users/signin'} />
-  )
-}
+  return <LoginForm title={"Sign In"} submitUrl={"/api/users/signin"} />;
+};
