@@ -7,7 +7,9 @@ const AppComponent = ({ Component, pageProps, currentUser }) => {
   return (
     <div>
       <Header currentUser={currentUser} />
-      <Component {...pageProps} />
+      <div className="container">
+        <Component currentUser={currentUser} {...pageProps} /> 
+      </div>
     </div>
   )
 }
@@ -16,11 +18,12 @@ AppComponent.getInitialProps = async (appContext) => {
   let currentUser = {}
   let pageProps = {}
   try {
-    const { data } = await getAxiosClient(appContext.ctx).get('/api/users/currentUser')
+    const axiosClient = getAxiosClient(appContext.ctx)
+    const { data } = await axiosClient.get('/api/users/currentUser')
     currentUser = data?.currentUser
 
     if (appContext.Component.getInitialProps) {
-      pageProps = await appContext.Component.getInitialProps(appContext.ctx)
+      pageProps = await appContext.Component.getInitialProps(appContext.ctx, axiosClient, currentUser)
     }
   }
   catch (err) {
